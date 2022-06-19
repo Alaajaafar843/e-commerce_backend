@@ -5,6 +5,7 @@ const dotnev = require("dotenv");
 const bodyParser = require("body-parser");
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
+const productRoute = require("./routes/product");
 dotnev.config();
 
 mongoose
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 
 app.use("/api/users/", userRoute);
 app.use("/api/auth/", authRoute);
+app.use("/api/products", productRoute);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("====================================");
