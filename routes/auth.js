@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../models/User");
 const cryptoJs = require("crypto-js");
 const jwt = require("jsonwebtoken");
+var passport = require("passport");
+const dotenv = require("dotenv").config();
 
 router.post("/register", async (req, res) => {
   const newUser = new User({

@@ -18,82 +18,66 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+//Update product
+
 router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
       },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedProduct);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//Delete
+//Delete product
 
-router.delete("/delete/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json("User deleted successfully!");
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json("Product deleted successfully!");
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//Get user
+//Get products
 
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
   const query = req.query.new;
+  const qCategory = req.query.category;
   try {
-    const users = query
-      ? await User.find().sort({ _id: -1 }).limit(5)
-      : await User.find();
-    res.status(200).json(users);
+    let products;
+
+    if (query) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(5);
+    } else if (qCategory) {
+      products = await Product.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      products = await Product.find();
+    }
+    res.status(200).json(products);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//Get specific user
+//Get specific product
 router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    const { password, ...others } = user._doc;
-    res.status(200).json(others);
+    const product = await Product.findById(req.params.id);
+    res.status(200).json(product);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-
-//Get user stats
-
-router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-  const date = new Date();
-  const lastYear = new Date(date.setFullYear(date.getFullYear) - 1);
-
-  try {
-    const data = await User.aggregate([
-      { $match: { createdAt: { $gte: lastYear } } },
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-        },
-      },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: 1 },
-        },
-      },
-    ]);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 module.exports = router;
