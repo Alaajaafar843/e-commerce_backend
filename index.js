@@ -11,6 +11,8 @@ const orderRoute = require("./routes/order");
 const session = require("express-session");
 const passport = require("passport");
 const User = require("./models/User");
+const cors = require("cors");
+const stripe = require("./routes/stripe");
 
 dotnev.config();
 
@@ -27,7 +29,7 @@ mongoose
     console.log("====================================");
   });
 app.use(session({ secret: "melody hensley is my spirit animal" }));
-
+app.use(cors);
 app.use(bodyParser.json());
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
@@ -85,6 +87,7 @@ app.use("/api/auth/", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/checkout", stripe);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("====================================");
