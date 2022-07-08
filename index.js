@@ -12,7 +12,7 @@ const session = require("express-session");
 const passport = require("passport");
 const User = require("./models/User");
 const cors = require("cors");
-const stripe = require("./routes/stripe");
+//const stripe = require("./routes/stripe");
 
 dotnev.config();
 
@@ -87,7 +87,7 @@ app.use("/api/auth/", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
-app.use("/api/checkout", stripe);
+//app.use("/api/checkout", stripe);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("====================================");
