@@ -48,7 +48,7 @@ router.delete("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
 
 //Get products
 
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
   const query = req.query.new;
   const qCategory = req.query.category;
   try {
@@ -72,7 +72,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //Get specific product
-router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);

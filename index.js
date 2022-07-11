@@ -12,7 +12,7 @@ const session = require("express-session");
 const passport = require("passport");
 const User = require("./models/User");
 const cors = require("cors");
-//const stripe = require("./routes/stripe");
+const stripeRoute = require("./routes/stripe");
 
 dotnev.config();
 
@@ -29,8 +29,8 @@ mongoose
     console.log("====================================");
   });
 app.use(session({ secret: "melody hensley is my spirit animal" }));
-app.use(cors);
-app.use(bodyParser.json());
+app.use(cors());
+app.use(express.json());
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 //Middleware
@@ -87,7 +87,7 @@ app.use("/api/auth/", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
-//app.use("/api/checkout", stripe);
+app.use("/api/checkout", stripeRoute);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("====================================");
